@@ -4,7 +4,6 @@ import {
 } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts/js/highcharts'; // Highcharts styled mode
 import {connect} from 'react-redux'
-//{this.props.Title}
 
 const RiverChart = (props) => (       
     <div>
@@ -20,7 +19,7 @@ const RiverChart = (props) => (
                <YAxis id="number">
                  <YAxis.Title>Number of employees</YAxis.Title>
                  <LineSeries id="fiskar" name="Fjöldi Fiska" data={props.data} />
-                 <LineSeries id="fps" name="Fiskur á stöng" data={props.data} />
+                 <LineSeries id="fps" name="Fiskur á stöng" data={props.fps} />
                </YAxis>
         </HighchartsChart>
     </div>

@@ -15,13 +15,14 @@ const NavBar = (props) => (
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <NavItem eventKey={1} href="">Heim</NavItem>
+          <NavItem eventKey={1} href="/">Heim</NavItem>
           <NavDropdown eventKey={3} title="Landshlutar" id="basic-nav-dropdown">
-            <MenuItem eventKey={3.1}>Action</MenuItem>
-            <MenuItem eventKey={3.2}>Another action</MenuItem>
-            <MenuItem eventKey={3.3}>Something else here</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey={3.3}>Separated link</MenuItem>
+            <MenuItem eventKey={3.1} href="/austurland">Austurland</MenuItem>
+            <MenuItem eventKey={3.2} href="/Nausturland">Norð Austurland</MenuItem>
+            <MenuItem eventKey={3.3} href="/Nvesturland">Norð Vesturland</MenuItem>
+            <MenuItem eventKey={3.4} href="/vesturland">Vesturland</MenuItem>
+            <MenuItem eventKey={3.5} href="/vestfirdir">Vestfirði</MenuItem>
+            <MenuItem eventKey={3.6} href="/sudurland">Suðurland</MenuItem>
           </NavDropdown>
         </Nav>
         <Nav pullRight>

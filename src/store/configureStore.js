@@ -4,7 +4,7 @@ import { createStore, combineReducers,
 import thunk from 'redux-thunk';
 
 import {
-    authReducer
+    authReducer, areaReducer
 } from '../reducers/reducers'
 
 
@@ -14,7 +14,8 @@ import {
 // The initial state object holds the initial state, combineReducer combines all the induvidual states from reducers
 export default ( initialState = {} ) => {
     const reducer = combineReducers({
-        auth: authReducer
+        auth: authReducer,
+        area: areaReducer
     });
     
     const store = createStore(reducer, initialState, compose(
