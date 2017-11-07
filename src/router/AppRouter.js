@@ -18,12 +18,12 @@ const AppRouter =() => (
     <Router history={history}>
         <Switch>
             <Route exact path="/" component={App} />
-            <Route path="/austurland" component={Austur} />
-            <Route path="/nausturland" component={NordAustur} />
-            <Route path="/nvesturland" component={NordVestur} />
-            <Route path="/sudurland" component={Sudur} />
-            <Route path="/vestfirdir" component={Vestfirdir} />
-            <Route path="/vesturland" component={Vestur} />
+            <Route exact path="/austurland" component={Austur} />
+            <Route exact path="/nausturland" component={NordAustur} />
+            <Route exact path="/nvesturland" component={NordVestur} />
+            <Route exact path="/sudurland" component={Sudur} />
+            <Route exact path="/vestfirdir" component={Vestfirdir} />
+            <Route exact path="/vesturland" component={Vestur} />
             <Route component={NotFound} />
         </Switch>
     </Router>

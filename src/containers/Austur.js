@@ -6,8 +6,7 @@ import NavBar from '../components/NavBar'
 import * as database from '../DataBase/DataBase'
 
 var RiversArray = []
-class Austur extends Component{
-    
+class Austur extends Component{   
     Rivers() {
         for (var key in database) {
         if(database[key].area === "AL"){

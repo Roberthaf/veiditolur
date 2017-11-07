@@ -22,8 +22,8 @@ const SideBar = (props) => (
             </tr>
         </thead>
         <tbody>
-            {props.Rivers.map(item =>  
-                <tr>
+            {props.Rivers.map((item, index) =>  
+                <tr key={index}>
                     <td>
                         {item}
                     </td>
