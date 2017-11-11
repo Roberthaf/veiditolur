@@ -34,9 +34,6 @@ class Vestfirdir extends Component{
       })
     }
     handleClick(e){
-        console.log(e)
-        //document.getElementById(e).setAttribute('class','active');
-        //.toggleClass('active');
         var element = document.getElementById(e);
         element.classList.toggle('active');
         
@@ -48,7 +45,6 @@ class Vestfirdir extends Component{
       }
     render(){
        var { RiverData, fps,years } = this.state; 
-       //console.log(this.state)
         return(
             <div className="App">
             <NavBar />
@@ -72,9 +68,6 @@ class Vestfirdir extends Component{
         );
     }
 }
-//  <RiverChart title={RiverData.title} data={fps} fps={RiverData.fps()} />                  
-//   <RiverChart title={RiverData.title} data={RiverData.data} fps={RiverData.fps()} id={RiverData.id}/>
-
 function mapStateToProps(state){
     return state;
   }

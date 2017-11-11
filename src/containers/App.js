@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import '../styles/Austur.css'
+import '../styles/App.css'
 import Highcharts from 'highcharts';
 import { withHighcharts } from 'react-jsx-highcharts';
 import { connect } from 'react-redux'
@@ -11,10 +11,6 @@ import AllRivers from '../components/AllRivers'
 import { Grid, TableView, TableHeaderRow,PagingPanel } from '@devexpress/dx-react-grid-bootstrap3'
 import { PagingState,  LocalPaging,  LocalSorting,  SortingState} from "@devexpress/dx-react-grid";
 import { Col, Row } from 'react-bootstrap'
-//Parse or database. 42 is 2016
-// Þarf að leysa það vesen
-var RiversArray= [];
-var aukning = [];
 
 class App extends Component {
   constructor(){
@@ -27,52 +23,65 @@ class App extends Component {
         {name: 'stangir', title: 'Stangarfjöldi'}
         
       ],
-      rows: RiversArray,
+      rows: '',
       sorting: [{ columnName: 'data', direction: 'desc' }],
+      aukning: '',
       selectYear : 2016,
+      selectNumber : 42,
       errorMessage :''
       
     }
     this.handleChange = this.handleChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.dataBaseGetter = this.dataBaseGetter.bind(this)
     this.changeSorting = sorting => this.setState({ sorting });
   }
-  componentWillMount(){
+  translateYearToNumber(){
+    var number = this.state.selectYear - 1974
+    return number
+  }
+  dataBaseGetter(){
+    var RiversArray = []
     for (var key in db) {
       RiversArray.push({
-        title: db[key].title, 
-        data: db[key].data[42], 
-        fps: Math.floor(db[key].data[42]/db[key].stangir),
-        stangir: db[key].stangir,
-        id: db[key].id
-      })
-      aukning.push({
-        title: db[key].title,
-        aukning: Math.floor(db[key].data[42]/db[key].data[41])
-      })
+      title: db[key].title, 
+      data: db[key].data[this.state.selectNumber], 
+      fps: Math.floor(db[key].data[this.state.selectNumber]/db[key].stangir),
+      stangir: db[key].stangir,
+      id: db[key].id})
     }
+    return RiversArray;
   }
+  componentWillMount(){
+    var RiversArray = this.dataBaseGetter()     
+    this.setState({
+        rows:RiversArray
+      })
+       // aukning.push({
+      //   title: db[key].title,
+      //   aukning: Math.floor(db[key].data[this.state.selectNumber]/db[key].data[this.state.selectNumber-1])
+      // })
+    }
   handleChange(e) {
     e.preventDefault();
-    this.setState({ selectYear: e.target.value });    
+    this.setState({ 
+      selectYear: e.target.value,
+      selectNumber : e.target.value - 1974,
+      
+    });    
     
   }
   onFormSubmit(e){
     e.preventDefault();
     //console.log(e.target);
     if(this.state.selectYear<1974){
-      this.setState({ errorMessage:'Engin gögn eldri en 1974'})
+      this.setState({ errorMessage:'Engin gögn eldri en frá 1974'})
     }else{
-      this.setState({ errorMessage:''})
-      console.log('allgood in the hood')
+      this.setState({
+        errorMessage:'',
+        rows: this.dataBaseGetter()
+      })
     }
-  }
-  getValidationState() {
-    // const length = this.state.value.length;
-    // if (length > 10) return 'success';
-    // else if (length > 5) return 'warning';
-    // else if (length > 0) return 'error';
-    // return null;
   }
   render() {
     const { rows, columns } = this.state;
@@ -81,7 +90,8 @@ class App extends Component {
         <NavBar />
         <div className="container">
           <Row>
-            <Col sm={6} md={3}>
+            <Col lg={12} xs={12}>
+              <h4 className="form-header">Veldu ár:&nbsp;</h4>
               <form className="input-group" onSubmit={this.onFormSubmit}>
               <input
                 type="number" 
@@ -94,10 +104,9 @@ class App extends Component {
                 <button type="submit" className="btn btn-secondary">Submit</button>
               </span>
               </form>
-            </Col>
-            <Col sm={6} md={3}>
-            {this.state.errorMessage}
-            </Col>
+              <h4 className="errorText">{this.state.errorMessage}</h4>
+              </Col>
+              
           </Row>
           <Grid
             rows={rows}

@@ -33,9 +33,6 @@ class vestur extends Component{
       })
     }
     handleClick(e){
-        console.log(e)
-        //document.getElementById(e).setAttribute('class','active');
-        //.toggleClass('active');
         var element = document.getElementById(e);
         element.classList.toggle('active');
         
@@ -71,9 +68,6 @@ class vestur extends Component{
         );
     }
 }
-//  <RiverChart title={RiverData.title} data={fps} fps={RiverData.fps()} />                  
-//   <RiverChart title={RiverData.title} data={RiverData.data} fps={RiverData.fps()} id={RiverData.id}/>
-
 function mapStateToProps(state){
     return state;
   }

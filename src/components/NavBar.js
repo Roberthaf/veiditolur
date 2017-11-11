@@ -1,13 +1,9 @@
 import React from 'react'
 import '../styles/Navbar.css'
-import {
-    Navbar, Nav, NavItem, NavDropdown, MenuItem
-} from 'react-bootstrap'
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
 import { history } from '../router/AppRouter'
 function handleSelect(selectedKey) {
   history.push("/");
-  //alert(`selected ${selectedKey}`);
-
 }
 
 const NavBar = (props) => (
@@ -25,16 +21,19 @@ const NavBar = (props) => (
             <MenuItem eventKey={2.1} href="/austurland">Austurland</MenuItem>
             <MenuItem eventKey={2.2} href="/Nausturland">Norð Austurland</MenuItem>
             <MenuItem eventKey={2.3} href="/Nvesturland">Norð Vesturland</MenuItem>
-            <MenuItem eventKey={2.4} href="/vesturland">Vesturland</MenuItem>
-            <MenuItem eventKey={2.5} href="/vestfirdir">Vestfirði</MenuItem>
-            <MenuItem eventKey={2.6} href="/sudurland">Suðurland</MenuItem>
+            <MenuItem eventKey={2.4} href="/sudurland">Suðurland</MenuItem>
+            <MenuItem eventKey={2.5} href="/vesturland">Vesturland</MenuItem>
+            <MenuItem eventKey={2.6} href="/vestfirdir">Vestfirði</MenuItem>
           </NavDropdown>
         </Nav>
-        <Nav pullRight>
-          <NavItem eventKey={1} href="">Link Right</NavItem>
-          <NavItem eventKey={2} href="">Link Right</NavItem>
-        </Nav>
+
       </Navbar.Collapse>
     </Navbar>
 );
+/*
+<Nav pullRight>
+<NavItem eventKey={1} href="">Link Right</NavItem>
+<NavItem eventKey={2} href="">Link Right</NavItem>
+</Nav>
+*/
 export default NavBar;

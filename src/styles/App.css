@@ -14,5 +14,12 @@
   color: white;
 }
 .input-group{
-  width: 300px;
+  width: 200px;
+}
+
+.form-header{
+  float: left;
+}
+.errorText{
+  /*float: right;*/
 }
