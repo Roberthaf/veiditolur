@@ -3,7 +3,6 @@ import '../styles/Navbar.css'
 import {
     Navbar, Nav, NavItem, NavDropdown, MenuItem
 } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import { history } from '../router/AppRouter'
 function handleSelect(selectedKey) {
   history.push("/");

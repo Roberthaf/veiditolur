@@ -1,30 +1,30 @@
-import React,{ Component } from 'react'
+import React from 'react'
 import {  
-    HighchartsChart, Chart, withHighcharts, XAxis, YAxis, Title, Subtitle, Legend, LineSeries    
+    HighchartsChart, Chart, XAxis, YAxis, Title, LineSeries 
 } from 'react-jsx-highcharts';
-import Highcharts from 'highcharts/js/highcharts'; // Highcharts styled mode
-import {connect} from 'react-redux'
 
 const RiverChart = (props) => (       
     <div>
-        {console.log(props)}
-        this is a RiverChart
-        <HighchartsChart>
-            <Chart />
-            <Title>{props.Title}</Title>
-               <XAxis>
-                 <XAxis.Title>Time</XAxis.Title>
-               </XAxis>
-        
-               <YAxis id="number">
-                 <YAxis.Title>Number of employees</YAxis.Title>
-                 <LineSeries id="fiskar" name="Fjöldi Fiska" data={props.data} />
-                 <LineSeries id="fps" name="Fiskur á stöng" data={props.fps} />
-               </YAxis>
-        </HighchartsChart>
+         <HighchartsChart>
+         <Chart />
+         <Title>{props.title}</Title>
+            <XAxis>
+              <XAxis.Title>Ár</XAxis.Title>
+            </XAxis>
+     
+            <YAxis id="number">
+              <YAxis.Title>Veiddir Fiskar</YAxis.Title>
+              <LineSeries id="fps" name="Fiskur á stöng" data={props.fps} />
+              <LineSeries id="fiskar" name="Fjöldi Fiska" data={props.data} />
+             
+            </YAxis>
+     </HighchartsChart>
     </div>
 );
+/*
 
+
+*/
 export default RiverChart;
 
 //<LineSeries id="manufacturing" name="Manufacturing" data={[24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]} />

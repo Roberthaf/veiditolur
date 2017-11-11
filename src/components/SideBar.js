@@ -15,7 +15,9 @@ import { Table } from 'react-bootstrap'
 // }
 
 const SideBar = (props) => (
+    
     <Table striped bordered condensed hover>
+        {console.log("onClick",props.onClickHandler)}
         <thead>
             <tr>
                 <th>Veiðiár</th>
@@ -23,7 +25,7 @@ const SideBar = (props) => (
         </thead>
         <tbody>
             {props.Rivers.map((item, index) =>  
-                <tr key={index}>
+                <tr key={index} onClick={() => props.onClickHandler(item)}>
                     <td>
                         {item}
                     </td>
