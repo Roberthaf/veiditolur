@@ -1,20 +1,20 @@
 import React from 'react'
 import {  
-    HighchartsChart, Chart,  XAxis, YAxis, ColumnSeries, Tooltip
+    HighchartsChart, Chart,  XAxis, YAxis, Title, ColumnSeries, Tooltip
 } from 'react-jsx-highcharts';
 
-const AllRiverChart = (props) => (       
+const FiskarPerStong = (props) => (       
     <div>
-    Heildarveiði á íslandi frá 1974 til 2016
         <HighchartsChart>
             <Chart />
-               <XAxis>
+            <Title>{props.title}</Title>
+               <XAxis categories={props.years}>
                  <XAxis.Title>Time</XAxis.Title>
                </XAxis>
         
                <YAxis id="number">
-                 <YAxis.Title>Heildar Fjöldi</YAxis.Title>
-                 <ColumnSeries id="AllRivers" name="Fjöldi Fiska" data={props.data} pointWidth={20}  />
+                 <YAxis.Title>Fiskar per stöng[stk]</YAxis.Title>
+                 <ColumnSeries id="FiskPerStong" name="Fjöldi Fiska per Stöng" data={props.fps} pointWidth={20}  />
                  
                </YAxis>
                <Tooltip />
@@ -24,4 +24,4 @@ const AllRiverChart = (props) => (
 
 //    plotOptions: { series: {    pointWidth: 40   } }
 //<LineSeries id="fps" name="Fiskur á stöng" data={props.fps} />
-export default AllRiverChart;
+export default FiskarPerStong;

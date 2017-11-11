@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import '../styles/App.css'
+import '../styles/Austur.css'
 import Highcharts from 'highcharts';
 import { withHighcharts } from 'react-jsx-highcharts';
 import { connect } from 'react-redux'
@@ -44,6 +44,7 @@ class App extends Component {
         data: db[key].data[42], 
         fps: Math.floor(db[key].data[42]/db[key].stangir),
         stangir: db[key].stangir,
+        id: db[key].id
       })
       aukning.push({
         title: db[key].title,
