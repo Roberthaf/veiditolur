@@ -23,3 +23,12 @@
 .errorText{
   /*float: right;*/
 }
+.panel{
+  border-radius: 0;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
+}
+.chart-border > div > h3,h4{
+  padding-top: 10px;
+}

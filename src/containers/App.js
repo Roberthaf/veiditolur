@@ -5,11 +5,11 @@ import { withHighcharts } from 'react-jsx-highcharts';
 import { connect } from 'react-redux'
 import * as db from '../DataBase/DataBase'
 import { all } from '../DataBase/allrivers'
-import { year } from '../DataBase/years'
+//import { year } from '../DataBase/years'
 import NavBar from '../components/NavBar'
 import AllRivers from '../components/AllRivers'
-import { Grid, TableView, TableHeaderRow,PagingPanel } from '@devexpress/dx-react-grid-bootstrap3'
-import { PagingState,  LocalPaging,  LocalSorting,  SortingState} from "@devexpress/dx-react-grid";
+import { Grid, TableView, TableHeaderRow,PagingPanel, TableSelection } from '@devexpress/dx-react-grid-bootstrap3'
+import { PagingState,  LocalPaging,  LocalSorting, SelectionState, SortingState} from "@devexpress/dx-react-grid";
 import { Col, Row } from 'react-bootstrap'
 
 class App extends Component {
@@ -25,6 +25,7 @@ class App extends Component {
       ],
       rows: '',
       sorting: [{ columnName: 'data', direction: 'desc' }],
+      selection: [],
       aukning: '',
       selectYear : 2016,
       selectNumber : 42,
@@ -33,13 +34,25 @@ class App extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.dataBaseGetter = this.dataBaseGetter.bind(this)
+    this.dataBaseGetter = this.dataBaseGetter.bind(this);
+    this.changeSelection = this.changeSelection.bind(this);
     this.changeSorting = sorting => this.setState({ sorting });
   }
   translateYearToNumber(){
     var number = this.state.selectYear - 1974
     return number
   }
+  changeSelection(selection) {
+    const lastSelected = selection
+      .find(selected => this.state.selection.indexOf(selected) === -1);
+  
+    if (lastSelected !== undefined) {
+      this.setState({ selection: [lastSelected] });
+    } else {
+      // NOTE: Uncomment the next line in order to allow clear selection by double-click
+      // this.setState({ selection: [] });
+     }
+    }
   dataBaseGetter(){
     var RiversArray = []
     for (var key in db) {
@@ -84,7 +97,7 @@ class App extends Component {
     }
   }
   render() {
-    const { rows, columns } = this.state;
+    const { rows, columns, selection } = this.state;
     return (
       <div className="App">
         <NavBar />
@@ -117,15 +130,24 @@ class App extends Component {
               onSortingChange={this.changeSorting}
             />
             <LocalSorting />
+            <SelectionState
+              selection={selection}
+              onSelectionChange={this.changeSelection}
+            />
             <PagingState defaultCurrentPage={0} pageSize={8} />
             <LocalPaging />
-            <LocalSorting />
             <TableView />
             <TableHeaderRow allowSorting /> 
+            <TableSelection
+              selectByRowClick
+              highlightSelected
+              showSelectionColumn={false}
+            />
             <PagingPanel />
           </Grid>
-
-          <AllRivers Title={all.title} data={all.data.reverse()} />  
+          <div className="chart-border">
+            <AllRivers Title={all.title} data={all.data.reverse()} />  
+          </div>
         </div>
       </div>
     );
@@ -136,34 +158,3 @@ function mapStateToProps(state){
 }
 //
 export default connect(mapStateToProps)(withHighcharts(App, Highcharts));
-/*
-          <form> </form>
-            <h4> Veldu ár 
-              <form >
-              <select id={'select-year'} name={'Ár'} > 
-                {year.map(
-                  (years, index) => 
-                  <option key={index} value={years}>{years}</option>
-                )}
-              </select>
-              <input type="submit" />
-              </form>
-              </h4> 
-              
-                      <FormGroup
-          controlId="formBasicText"
-          //validationState={this.getValidationState()}
-        >
-          <ControlLabel>Veldur ár</ControlLabel>
-          <FormControl
-            type="text"
-            value={this.state.selectYear}
-            placeholder="2016"
-            onChange={this.handleChange}
-          />
-          <FormControl.Feedback />
-        </FormGroup>
-              
-              
-              
-              */

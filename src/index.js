@@ -6,7 +6,7 @@ import AppRouter from './router/AppRouter'
 import { Provider } from 'react-redux'
 import configureStore from './store/configureStore'
 import './styles/index.css';
-import registerServiceWorker from './registerServiceWorker';
+//import registerServiceWorker from './registerServiceWorker';
 
 const store = configureStore();
 
@@ -15,4 +15,4 @@ ReactDOM.render(
         <AppRouter />
     </Provider>,
     document.getElementById('root'));
-registerServiceWorker();
+//registerServiceWorker();

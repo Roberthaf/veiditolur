@@ -19,8 +19,8 @@ const NavBar = (props) => (
         <NavItem onSelect={handleSelect} eventKey={1} href="/" >Heim</NavItem>
           <NavDropdown eventKey={2} title="Landshlutar" id="basic-nav-dropdown">
             <MenuItem eventKey={2.1} href="/austurland">Austurland</MenuItem>
-            <MenuItem eventKey={2.2} href="/Nausturland">Norð Austurland</MenuItem>
-            <MenuItem eventKey={2.3} href="/Nvesturland">Norð Vesturland</MenuItem>
+            <MenuItem eventKey={2.2} href="/nausturland">Norð Austurland</MenuItem>
+            <MenuItem eventKey={2.3} href="/nvesturland">Norð Vesturland</MenuItem>
             <MenuItem eventKey={2.4} href="/sudurland">Suðurland</MenuItem>
             <MenuItem eventKey={2.5} href="/vesturland">Vesturland</MenuItem>
             <MenuItem eventKey={2.6} href="/vestfirdir">Vestfirði</MenuItem>

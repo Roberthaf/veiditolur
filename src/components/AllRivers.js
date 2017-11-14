@@ -5,7 +5,7 @@ import {
 
 const AllRiverChart = (props) => (       
     <div>
-    Heildarveiði á íslandi frá 1974 til 2016
+    <h3>Heildarveiði á íslandi frá 1974 til 2016</h3>
         <HighchartsChart>
             <Chart />
                <XAxis>

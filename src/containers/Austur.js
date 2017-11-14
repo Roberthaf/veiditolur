@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import '../styles/Austur.css'
 import { connect } from 'react-redux'
 import { Grid, Row, Col } from 'react-bootstrap'
-import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
 import * as db from '../DataBase/DataBase'
 import {year } from '../DataBase/years'
@@ -10,59 +9,86 @@ import RiverChart from '../components/HighChartRiver'
 import { withHighcharts } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts';
 import FiskarPerStong from '../components/FiskPerStong'
-
+import SideBarDev from '../components/SideBarDev'
 
 class Austur extends Component{   
     constructor(){
         super();
-        this.handleClick = this.handleClick.bind(this);
         this.state ={
-            selectedRiver : '',
-            RiverData: db['breiddalsa'],
-            fps: db['breiddalsa'].fps(),
-            years: year
+            selection: [0],
+            RiverNew: '',
+            years: year,
+            columns:[
+                { name: "title", title: "Veiðiár" }
+            ]
         }
-    }
+        this.changeSelection = this.changeSelection.bind(this);
+    }  
+    changeSelection(selection) {
+        const lastSelected = selection
+          .find(selected => this.state.selection.indexOf(selected) === -1);
+      
+        if (lastSelected !== undefined) {
+          this.setState({ selection: [lastSelected] });
+        } else {
+          // NOTE: Uncomment the next line in order to allow clear selection by double-click
+          // this.setState({ selection: [] });
+         }
+        }
     componentWillMount(){
-        var RiversArray = []
+        var RiverNew = [];
         for (var key in db) {
             if(db[key].area === "AL"){
-                 RiversArray.push([db[key].title, db[key].id])
+                RiverNew.push({
+                    title: db[key].title,
+                    data: db[key].data,
+                    stangir: db[key].stangir,
+                    fps: db[key].fps(),                    
+                    id: db[key].id
+                    })
             }
         }
       this.setState({
-        Rivers: RiversArray
+        RiverNew: RiverNew
       })
     }
-    handleClick(e){
-        var element = document.getElementById(e);
-        element.classList.toggle('active');
-        
-        this.setState({
-            selectedRiver: e,
-            RiverData: db[e],
-            fps: db[e].fps()
-        })
-      }
+
     render(){
-       var { RiverData, fps,years } = this.state; 
-       //console.log(this.state)
+       var { years, selection, RiverNew, columns } = this.state; 
         return(
             <div className="App">
             <NavBar />
             <Grid >
                 <Row>
-                    <Col xs={2} md={2} >
-                    <SideBar 
-                        Rivers={this.state.Rivers}
-                        onClickHandler={this.handleClick}
-                        />   
+                    <Col lg={2} xs={3} md={2} className="sidebar">
+                        <div>
+                        <SideBarDev 
+                            rows={RiverNew}
+                            columns={columns}
+                            selection={selection}
+                            onSelectionChange={this.changeSelection}
+                        />
+                        </div>
                     </Col>
-                    <Col xs={10} md={10} >
-                    <h4>Heildar Veiði</h4>
-                    <RiverChart title={RiverData.title} data={RiverData.data} id={RiverData.id} years={years}/>
-                    <h4>Fiskar per stöng</h4>
-                    <FiskarPerStong title={RiverData.title} fps={fps} years={years} />
+                    <Col lg={10} xs={9} md={10}>
+                        <div className="chart-border">
+                            <h4>Heildar Veiði</h4>
+                            <RiverChart 
+                                title={RiverNew[selection].title} 
+                                data={RiverNew[selection].data} 
+                                id={RiverNew[selection].id} 
+                                years={years}
+                                stangir={RiverNew[selection].stangir}
+                            />
+                        </div>
+                        <div className="chart-border">
+                            <h4>Fiskar per stöng</h4>
+                                <FiskarPerStong 
+                                    title={RiverNew[selection].title} 
+                                    fps={RiverNew[selection].fps} 
+                                    years={years} 
+                                />
+                        </div>
                     </Col>
                 </Row>
             </Grid>
