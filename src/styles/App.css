@@ -13,15 +13,17 @@
   padding: 20px;
   color: white;
 }
-.input-group{
-  width: 200px;
+.selectYear{
+  font-size: 125%;
 }
-
+.navbarForm{
+  padding: 0px ; 
+}
+#root > div > div > div.row > div > div > div > input{
+  width: 100px;
+}
 .form-header{
   float: left;
-}
-.errorText{
-  /*float: right;*/
 }
 .panel{
   border-radius: 0;
@@ -31,4 +33,7 @@
 }
 .chart-border > div > h3,h4{
   padding-top: 10px;
+}
+.year-select{
+  height:70px;
 }

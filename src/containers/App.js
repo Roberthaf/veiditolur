@@ -8,9 +8,15 @@ import { all } from '../DataBase/allrivers'
 //import { year } from '../DataBase/years'
 import NavBar from '../components/NavBar'
 import AllRivers from '../components/AllRivers'
-import { Grid, TableView, TableHeaderRow,PagingPanel, TableSelection } from '@devexpress/dx-react-grid-bootstrap3'
-import { PagingState,  LocalPaging,  LocalSorting, SelectionState, SortingState} from "@devexpress/dx-react-grid";
-import { Col, Row } from 'react-bootstrap'
+import { 
+  Grid, TableView, TableHeaderRow,PagingPanel, TableSelection,
+  TableFilterRow 
+} from '@devexpress/dx-react-grid-bootstrap3'
+import { 
+  PagingState, LocalPaging,  LocalSorting, SelectionState, 
+  SortingState, FilteringState, LocalFiltering
+} from "@devexpress/dx-react-grid";
+import { Col, Row, FormGroup, FormControl, Button, Navbar } from 'react-bootstrap'
 
 class App extends Component {
   constructor(){
@@ -37,6 +43,7 @@ class App extends Component {
     this.dataBaseGetter = this.dataBaseGetter.bind(this);
     this.changeSelection = this.changeSelection.bind(this);
     this.changeSorting = sorting => this.setState({ sorting });
+
   }
   translateYearToNumber(){
     var number = this.state.selectYear - 1974
@@ -80,9 +87,7 @@ class App extends Component {
     this.setState({ 
       selectYear: e.target.value,
       selectNumber : e.target.value - 1974,
-      
     });    
-    
   }
   onFormSubmit(e){
     e.preventDefault();
@@ -96,6 +101,7 @@ class App extends Component {
       })
     }
   }
+  
   render() {
     const { rows, columns, selection } = this.state;
     return (
@@ -104,22 +110,21 @@ class App extends Component {
         <div className="container">
           <Row>
             <Col lg={12} xs={12}>
-              <h4 className="form-header">Veldu ár:&nbsp;</h4>
-              <form className="input-group" onSubmit={this.onFormSubmit}>
-              <input
-                type="number" 
-                placeholder="Veldu ár"
+            <Navbar.Form pullLeft className="navbarForm">
+            <span className="selectYear">Veldu ár:&nbsp;</span>
+             <FormGroup>
+               <FormControl 
+                type="number"
                 className="form-control"
+                placeholder="Search" 
                 value={this.state.selectYear}
                 onChange={this.handleChange}
-              />
-              <span className="input-group-btn">
-                <button type="submit" className="btn btn-secondary">Submit</button>
-              </span>
-              </form>
+                />
+            </FormGroup>
+            <Button onClick={this.onFormSubmit} type="submit">Submit</Button>
+            </Navbar.Form>
               <h4 className="errorText">{this.state.errorMessage}</h4>
-              </Col>
-              
+            </Col>
           </Row>
           <Grid
             rows={rows}
@@ -129,6 +134,8 @@ class App extends Component {
               sorting={this.state.sorting}
               onSortingChange={this.changeSorting}
             />
+            <FilteringState defaultFilters={[]} />
+            <LocalFiltering />
             <LocalSorting />
             <SelectionState
               selection={selection}
@@ -143,6 +150,8 @@ class App extends Component {
               highlightSelected
               showSelectionColumn={false}
             />
+            <TableFilterRow />
+
             <PagingPanel />
           </Grid>
           <div className="chart-border">

@@ -8,7 +8,7 @@ import {year } from '../DataBase/years'
 import RiverChart from '../components/HighChartRiver'
 import { withHighcharts } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts';
-import FiskarPerStong from '../components/FiskPerStong'
+//import FiskarPerStong from '../components/FiskPerStong'
 import SideBarDev from '../components/SideBarDev'
 
 class Austur extends Component{   
@@ -55,6 +55,7 @@ class Austur extends Component{
 
     render(){
        var { years, selection, RiverNew, columns } = this.state; 
+       console.log(this.props)
         return(
             <div className="App">
             <NavBar />
@@ -81,14 +82,14 @@ class Austur extends Component{
                                 stangir={RiverNew[selection].stangir}
                             />
                         </div>
-                        <div className="chart-border">
+{/*                         <div className="chart-border">
                             <h4>Fiskar per stöng</h4>
                                 <FiskarPerStong 
                                     title={RiverNew[selection].title} 
                                     fps={RiverNew[selection].fps} 
                                     years={years} 
                                 />
-                        </div>
+                        </div> */}
                     </Col>
                 </Row>
             </Grid>

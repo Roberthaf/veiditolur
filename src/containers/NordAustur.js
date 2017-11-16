@@ -8,8 +8,8 @@ import {year } from '../DataBase/years'
 import RiverChart from '../components/HighChartRiver'
 import { withHighcharts } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts';
-import FiskarPerStong from '../components/FiskPerStong'
-
+//import FiskarPerStong from '../components/FiskPerStong';
+import '../styles/Austur.css';
 
 class NordAustur extends Component{   
     constructor(){
@@ -81,14 +81,14 @@ class NordAustur extends Component{
                                  stangir={RiverNew[selection].stangir}
                              />
                          </div>
-                         <div className="chart-border">
+{/*                          <div className="chart-border">
                              <h4>Fiskar per stöng</h4>
                                  <FiskarPerStong 
                                      title={RiverNew[selection].title} 
                                      fps={RiverNew[selection].fps} 
                                      years={years} 
                                  />
-                         </div>
+                         </div> */}
                      </Col>
                  </Row>
              </Grid>
