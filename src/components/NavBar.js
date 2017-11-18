@@ -1,13 +1,13 @@
 import React from 'react'
 import '../styles/Navbar.css'
 import { 
-  Navbar, Nav, NavItem, NavDropdown, MenuItem,
-  FormGroup, FormControl, Button
+  Navbar, Nav, NavItem, NavDropdown, MenuItem
 } from 'react-bootstrap'
 import { history } from '../router/AppRouter'
 function handleSelect(selectedKey) {
   history.push("/");
 }
+//  FormGroup, FormControl, Button
 
 const NavBar = (props) => (
     <Navbar className="Navbar-main" inverse collapseOnSelect>

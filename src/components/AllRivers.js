@@ -2,9 +2,9 @@ import React from 'react'
 import {  
     HighchartsChart, Chart,  XAxis, YAxis, ColumnSeries, Tooltip
 } from 'react-jsx-highcharts';
-
+import '../styles/AllRivers.css'
 const AllRiverChart = (props) => (       
-    <div>
+    <div className="RiverChart">
     <h3>Heildarveiði á íslandi frá 1974 til 2016</h3>
         <HighchartsChart>
             <Chart />

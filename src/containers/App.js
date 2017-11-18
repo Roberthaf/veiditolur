@@ -3,20 +3,32 @@ import '../styles/App.css'
 import Highcharts from 'highcharts';
 import { withHighcharts } from 'react-jsx-highcharts';
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import * as db from '../DataBase/DataBase'
 import { all } from '../DataBase/allrivers'
 //import { year } from '../DataBase/years'
 import NavBar from '../components/NavBar'
 import AllRivers from '../components/AllRivers'
 import { 
-  Grid, TableView, TableHeaderRow,PagingPanel, TableSelection,
-  TableFilterRow 
-} from '@devexpress/dx-react-grid-bootstrap3'
-import { 
-  PagingState, LocalPaging,  LocalSorting, SelectionState, 
-  SortingState, FilteringState, LocalFiltering
+  PagingState, 
+  LocalPaging,  
+  LocalSorting, 
+  SelectionState, 
+  SortingState, 
+  FilteringState, 
+  LocalFiltering,
 } from "@devexpress/dx-react-grid";
-import { Col, Row, FormGroup, FormControl, Button, Navbar } from 'react-bootstrap'
+import { 
+  Grid, 
+  TableView, 
+  TableHeaderRow, 
+  PagingPanel, 
+  TableSelection, 
+  TableFilterRow ,
+} from '@devexpress/dx-react-grid-bootstrap3'
+
+
+import { Col, Row, FormGroup,Form, FormControl, Button, Navbar } from 'react-bootstrap'
 
 class App extends Component {
   constructor(){
@@ -29,7 +41,8 @@ class App extends Component {
         {name: 'stangir', title: 'Stangarfjöldi'}
         
       ],
-      rows: '',
+      rows: [],
+      allowedPageSizes: [5, 10, 15, 0],      
       sorting: [{ columnName: 'data', direction: 'desc' }],
       selection: [],
       aukning: '',
@@ -43,7 +56,6 @@ class App extends Component {
     this.dataBaseGetter = this.dataBaseGetter.bind(this);
     this.changeSelection = this.changeSelection.bind(this);
     this.changeSorting = sorting => this.setState({ sorting });
-
   }
   translateYearToNumber(){
     var number = this.state.selectYear - 1974
@@ -60,11 +72,12 @@ class App extends Component {
       // this.setState({ selection: [] });
      }
     }
+    //<Link to={`/users/${user.id}`}>{user.name}</Link>
   dataBaseGetter(){
     var RiversArray = []
     for (var key in db) {
       RiversArray.push({
-      title: db[key].title, 
+      title: db[key].title,
       data: db[key].data[this.state.selectNumber], 
       fps: Math.floor(db[key].data[this.state.selectNumber]/db[key].stangir),
       stangir: db[key].stangir,
@@ -72,6 +85,13 @@ class App extends Component {
     }
     return RiversArray;
   }
+  // this.tableRowTemplate = ({ children, row }) => (
+  //   <tr
+  //     onClick={() => alert(JSON.stringify(row))}
+  //   >
+  //     {children}
+  //   </tr>
+  // );
   componentWillMount(){
     var RiversArray = this.dataBaseGetter()     
     this.setState({
@@ -91,7 +111,6 @@ class App extends Component {
   }
   onFormSubmit(e){
     e.preventDefault();
-    //console.log(e.target);
     if(this.state.selectYear<1974){
       this.setState({ errorMessage:'Engin gögn eldri en frá 1974'})
     }else{
@@ -101,35 +120,72 @@ class App extends Component {
       })
     }
   }
-  
+  //lg={4} md={4} sm={6} xs={12}
   render() {
-    const { rows, columns, selection } = this.state;
-    return (
+    const { rows, columns, selection,allowedPageSizes } = this.state;
+    var floatleft = {float: 'left'}
+      return (
       <div className="App">
         <NavBar />
         <div className="container">
           <Row>
-            <Col lg={12} xs={12}>
-            <Navbar.Form pullLeft className="navbarForm">
-            <span className="selectYear">Veldu ár:&nbsp;</span>
-             <FormGroup>
-               <FormControl 
-                type="number"
-                className="form-control"
-                placeholder="Search" 
-                value={this.state.selectYear}
-                onChange={this.handleChange}
-                />
-            </FormGroup>
-            <Button onClick={this.onFormSubmit} type="submit">Submit</Button>
-            </Navbar.Form>
-              <h4 className="errorText">{this.state.errorMessage}</h4>
+            <Col lg={3} className="input-bar">
+                <span className="input-group-item spanSize">Veldu ár: </span>
+                <div class="input-bar-item">
+                <form>
+
+                    <div className="input-group">
+                    <input 
+                    type="number"
+                    className="form-control"                    
+                    placeholder="Search" 
+                    value={this.state.selectYear}
+                    onChange={this.handleChange}
+                    />
+                    
+                    <span className="input-group-btn">
+                        <Button  onClick={this.onFormSubmit}
+                        className="btn btn-info"
+                    >Leita</Button>
+                    </span>
+                    </div>
+                 </form>
+                </div>      
+         {/*   <Row>
+                 <Col lg={4} sm={6} xs={6}>
+                  <form pullLeft className="">
+                  <span className="selectYear">Veldu ár:&nbsp;</span>
+                  <FormGroup>
+                    <FormControl 
+                      type="number"
+                      className="form-control"
+                      placeholder="Search" 
+                      value={this.state.selectYear}
+                      onChange={this.handleChange}
+                      />
+                   <Button 
+                    onClick={this.onFormSubmit} 
+                    type="submit"
+                    style={buttonStyle}
+                  >Leita</Button>
+                  </FormGroup>
+ 
+                  </form>
+                  <h4 className="errorText">{this.state.errorMessage}</h4>
+
+                </Col>
+                </Row>   */}
             </Col>
-          </Row>
+
+          <Col lg={12} xs={12}>
           <Grid
             rows={rows}
             columns={columns}
            >
+          <PagingState 
+              defaultCurrentPage={0} 
+              defaultPageSize={5}            
+            />
             <SortingState
               sorting={this.state.sorting}
               onSortingChange={this.changeSorting}
@@ -141,9 +197,8 @@ class App extends Component {
               selection={selection}
               onSelectionChange={this.changeSelection}
             />
-            <PagingState defaultCurrentPage={0} pageSize={8} />
             <LocalPaging />
-            <TableView />
+            <TableView  />
             <TableHeaderRow allowSorting /> 
             <TableSelection
               selectByRowClick
@@ -151,12 +206,17 @@ class App extends Component {
               showSelectionColumn={false}
             />
             <TableFilterRow />
-
-            <PagingPanel />
+            <PagingPanel 
+              allowedPageSizes={allowedPageSizes}
+            />
           </Grid>
+          </Col>
+          <Col lg={12} xs={12}>
           <div className="chart-border">
             <AllRivers Title={all.title} data={all.data.reverse()} />  
           </div>
+          </Col>
+          </Row>
         </div>
       </div>
     );
