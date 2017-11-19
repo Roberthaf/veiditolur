@@ -2,7 +2,11 @@
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
 }
-
+.btn-info{
+  background-color:#337ab7;
+  border-color: #337ab7;
+}
+/*#337ab7*/
 .App-header {
   background-color: #222;
   height: 150px;
@@ -52,4 +56,9 @@
 .input-group{
 max-width: 150px;
   
+}
+@media (max-width: 992px) {
+  .container {
+     width: 100%;
+  }
 }

@@ -1,5 +1,5 @@
 // 1 til 43 er þá lykillinn til að finna ár og gögninn þar inni
-
+import React from 'react';
 /* Austurland Byrjar hérna */
 export const vesturdalsa = {
     title: 'Vesturdalsá',
@@ -9,7 +9,8 @@ export const vesturdalsa = {
         116,264,321,218,329,201,216,159,71,129,124,269,175,88,102,104,158,
         136,206,258,316,169,207,139,0,338,0],
     fps() { return this.data.map(x => (Math.round(x/this.stangir))) },
-     id: 'vesturdalsa'
+    id: 'vesturdalsa',
+    linking() {let myObject =<a href='/sudurland/yranga'>{this.title}</a>; return ({myObject}) }
 }
 export const breiddalsa = {
     title: 'Breiðdalsá',
@@ -643,8 +644,9 @@ export const yranga = {
     data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
         4230,6228,14315,10749,6210,4961,4353,5461,3063,8803,8935,7451],
     fps() { return this.data.map(x => (Math.round(x/this.stangir))) },
-     id: 'yranga'
-    }
+    id: 'yranga',
+    linking() {let myObject =<a href='/sudurland/yranga'>{this.title}</a>; return ({myObject}) }
+}
 
 export const olfusa = {
     title: 'Ölfusá',
@@ -688,8 +690,6 @@ export const afall = {
         id: 'afall'
 }
                 
-
-
 
 
 /*Vestfirðir byrja hérna */

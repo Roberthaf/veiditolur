@@ -9,9 +9,6 @@
 .RiverChart{
     text-align: center;
 }
-.RiverChart{
-    text-align: center;
-}
 
 .sidebar{
     top:10px;
@@ -32,3 +29,8 @@
  .brt-green{
      color: green;
  }
+/*  @media (max-width: 750px) {
+     table > tbody > tr > td {
+      text-align: center;
+    }
+  } */

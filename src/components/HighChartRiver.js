@@ -16,7 +16,7 @@ const RiverChart = (props) => (
             <YAxis id="number">
               <YAxis.Title>Veiddir Fiskar</YAxis.Title>
               
-              <ColumnSeries id="fiskar" name="Fjöldi Fiska" data={props.data} pointWidth={20} />
+              <ColumnSeries color={props.color} id="fiskar" name="Fjöldi Fiska" data={props.data} pointWidth={20} />
             </YAxis>
             <Tooltip />
      </HighchartsChart>

@@ -6,7 +6,9 @@
     -webkit-box-shadow: 0 0 3px #ccc;
     box-shadow: 0 0 3px #ccc;
 }
-
+.chart-border > h4 {
+    text-align: center;
+}
 .sidebar{
     top:10px;
 }

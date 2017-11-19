@@ -1,3 +1,4 @@
+/*Gera þetta automatic */
 export const all = {
     title:'Heildar Veiði á íslandi',
     data: [

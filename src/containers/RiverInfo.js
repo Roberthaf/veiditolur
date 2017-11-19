@@ -11,12 +11,15 @@ import Highcharts from 'highcharts';
 import {
     PagingState,
     LocalPaging,
-  } from '@devexpress/dx-react-grid';
+    FilteringState,
+    LocalFiltering,
+} from '@devexpress/dx-react-grid';
 import {
     Grid,
     TableView,
     TableHeaderRow,
-    PagingPanel,    
+    PagingPanel,
+    TableFilterRow,
 } from '@devexpress/dx-react-grid-bootstrap3';
 
 class RiverInfo extends Component {
@@ -29,9 +32,7 @@ class RiverInfo extends Component {
                 { name: "title", title: "Veiðiár" }
             ],
             rows: [],
-            sinlgeRiver:[]
-            
-
+            sinlgeRiver: []
         }
         this.changeSelection = this.changeSelection.bind(this);
         this.checkBreyting = this.checkBreyting.bind(this);
@@ -43,9 +44,7 @@ class RiverInfo extends Component {
             </tr>
         );
     }
-    componentDidMount() {
-        //const {match:{ params} } = this.props
-    }
+
     changeSelection(selection) {
         const lastSelected = selection
             .find(selected => this.state.selection.indexOf(selected) === -1);
@@ -63,10 +62,6 @@ class RiverInfo extends Component {
         const location = this.props.match.params.id;
         const url = this.props.match.url;
         var area = MyRe.exec(`${url}`)
-        
-        console.log(area[1])
-        console.log(location)
-        console.log(url)
         // Búa til rows fyrir SideBarDev
         for (var key in db) {
             if (db[key].area === `${area[1]}`) {
@@ -97,32 +92,33 @@ class RiverInfo extends Component {
         }
     }
     render() {
-        var { years, selection, columns, rows,sinlgeRiver } = this.state;
-        console.log(this.state)
-
+        var { years, selection, columns, rows, sinlgeRiver } = this.state;
         return (
             <div className="App">
                 <NavBar />
                 <div className="container" >
                     <Row>
-                        <Col lg={2} xs={3} md={2} className="sidebar">
+                        <Col lg={2} md={2} sm={2} xs={12} className="sidebar">
                             <div>
                                 <Grid
                                     rows={rows}
                                     columns={columns}
                                 >
-                                <PagingState
-                                    defaultCurrentPage={0}
-                                    defaultPageSize={8}
-                                />
-                                <LocalPaging />
-                                <TableView tableRowTemplate={this.tableRowTemplate} />
-                                <TableHeaderRow />
-                                <PagingPanel />
+                                    <FilteringState defaultFilters={[]} />
+                                    <LocalFiltering />
+                                    <PagingState
+                                        defaultCurrentPage={0}
+                                        defaultPageSize={16}
+                                    />
+                                    <LocalPaging />
+                                    <TableView tableRowTemplate={this.tableRowTemplate} />
+                                    <TableHeaderRow />
+                                    <TableFilterRow />
+                                    <PagingPanel />
                                 </Grid>
                             </div>
                         </Col>
-                        <Col lg={10} xs={9} md={10}>
+                        <Col lg={10} md={10} sm={9} xs={12}>
                             <div className="chart-border">
                                 <h4>Heildar Veiði í {sinlgeRiver.title}</h4>
                                 <RiverChart
