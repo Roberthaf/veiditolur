@@ -8,6 +8,7 @@ import * as db from '../DataBase/DataBase';
 import { all } from '../DataBase/allrivers';
 import NavBar from '../components/NavBar';
 import AllRivers from '../components/AllRivers';
+import _ from 'lodash';
 import {
   PagingState,
   LocalPaging,
@@ -26,14 +27,14 @@ import {
   TableFilterRow,
 } from '@devexpress/dx-react-grid-bootstrap3'
 import { Col, Row, Button  } from 'react-bootstrap'
-
+import PieChart from '../components/PieChart'
 class App extends Component {
   constructor() {
     super();
     this.state = {
       columns: [
         //{ name: 'title', title: 'Veiðivatn' },
-        { name: 'linking', title: 'Viðivatn'},
+        { name: 'linking', title: 'Veiðivatn'},
         { name: 'data', title: 'Heildarveiði [stk]' },
         { name: 'fps', title: 'Laxar á stöng [stk]' },
         { name: 'stangir', title: 'Stangarfjöldi' }
@@ -45,9 +46,10 @@ class App extends Component {
       selection: [],
       aukning: '',
       selectYear: 2017,
+      baseYear: 1974,
       selectNumber: 43,
-      errorMessage: ''
-
+      errorMessage: '',
+      pieArray: []
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -56,6 +58,8 @@ class App extends Component {
     this.changeSelection = this.changeSelection.bind(this);
     this.changeSorting = sorting => this.setState({ sorting });
     this.createLink = this.createLink.bind(this);
+    this.pieChartDbGetter = this.pieChartDbGetter.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
   translateYearToNumber() {
     var number = this.state.selectYear - 1974
@@ -87,6 +91,54 @@ class App extends Component {
     }
     return RiversArray;
   }
+
+  pieChartDbGetter(){
+    var PieArray = [];
+    var baseYear= 1974;
+    var selectNumber = this.state.selectYear - baseYear;
+    console.log(selectNumber)
+    var al= 0,nal= 0,nvl= 0,vl= 0,sl= 0,vf = 0;
+    var all = [];
+    for(var key in db){
+     if(db[key].year[selectNumber]){
+      if(db[key].area==='vesturland'){
+        vl += db[key].data[selectNumber]
+      }
+      if(db[key].area==='austurland'){
+        al += db[key].data[selectNumber]
+      }
+      if(db[key].area==='nausturland'){
+        nal += db[key].data[selectNumber]
+      }
+      if(db[key].area==='nvesturland'){
+        nvl += db[key].data[selectNumber]
+      }
+      if(db[key].area==='sudurland'){
+        sl += db[key].data[selectNumber]
+      }
+      if(db[key].area==='vestfirdir'){
+        vf += db[key].data[selectNumber]
+      }
+     }
+    // if(db[key].year.map(o => o===2017 )){
+    //   PieArray.push({
+    //     title: db[key].title,
+    //     data: db[key].data[this.state.selectNumber],
+    //     id: db[key].id,
+    //     area: db[key].area,
+    //   })
+    // }
+  }
+  PieArray = [ 
+    ['Austurland',al],
+    ['Norð Austurland',nal],
+    ['Norð Vesturland',nvl],
+    ['Vesturland',vl],
+    ['Suðurland',sl],
+    ['Vestfirðir',vf],
+  ]
+  return PieArray;
+  }
   createLink(title, id, href){
     //console.log(href, id, title );
     var link = `/`+href+`/`+id
@@ -102,8 +154,10 @@ class App extends Component {
   // );
   componentWillMount() {
     var RiversArray = this.dataBaseGetter();
+    var PieArray = this.pieChartDbGetter();
     this.setState({
-      rows: RiversArray
+      rows: RiversArray,
+      pieArray: PieArray,
     })
     // aukning.push({
     //   title: db[key].title,
@@ -126,13 +180,29 @@ class App extends Component {
     } else {
       this.setState({
         errorMessage: '',
-        rows: this.dataBaseGetter()
+        rows: this.dataBaseGetter(),
+        pieArray: this.pieChartDbGetter()
       })
     }
   }
-
+  handleKeyPress =(e) => {
+      e.preventDefault();      
+       if (e.key === 'Enter') {
+        if (this.state.selectYear < 1974) {
+          this.setState({ errorMessage: 'Engin gögn eldri en frá 1974' })
+        } else {
+          this.setState({
+            errorMessage: '',
+            rows: this.dataBaseGetter(),
+            pieArray: this.pieChartDbGetter()
+          })
+        }
+       }
+     }
   render() {
-    const { rows, columns, selection, allowedPageSizes } = this.state;
+    const {
+       rows, columns, selection, allowedPageSizes,selectYear, pieArray
+    } = this.state;
     //console.log("Create Link",this.createLink())
     //console.log(this.state.linking)
     return (
@@ -151,6 +221,7 @@ class App extends Component {
                       placeholder="Search"
                       value={this.state.selectYear}
                       onChange={this.handleChange}
+                      onKeyPress={this.handleKeyPress}
                     />
                     <span className="input-group-btn">
                       <Button onClick={this.onFormSubmit}
@@ -162,6 +233,7 @@ class App extends Component {
               </div>
             </Col>
              <Col lg={12} xs={12}>
+             <span>{this.state.errorMessage}</span>
                <Grid
                 rows={rows}
                 columns={columns}
@@ -197,6 +269,12 @@ class App extends Component {
                 />
               </Grid>
              </Col>
+             <Col lg={12} xs={12}>
+              <div className="chart-border">
+              <div>Skoða sem  <Button>Súlurit</Button> <Button>Köku</Button></div>
+              <PieChart Title={`Heildarveiði í landshlutum ${selectYear}`} data={pieArray} />
+              </div>
+            </Col>
              <Col lg={12} xs={12}>
               <div className="chart-border">
                 <AllRivers Title={all.title} data={all.data.reverse()} />

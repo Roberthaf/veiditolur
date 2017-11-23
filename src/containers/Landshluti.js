@@ -8,7 +8,7 @@ import { year } from '../DataBase/years'
 import RiverChart from '../components/HighChartRiver'
 import { withHighcharts } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts';
-import BarChart from '../components/Barchart';
+//import BarChart from '../components/Barchart';
 import {
     PagingState,
     LocalPaging,
@@ -37,12 +37,13 @@ class Landshluti extends Component {
             heildarveidi: '',
             landshluti: '',
             area: '',
-            year: [2017, 2016],
-            pastYear: ''
+            year: 2017,
+            pastYear: '',
+            yearArray: ''
         }
         this.changeSelection = this.changeSelection.bind(this);
         this.checkBreyting = this.checkBreyting.bind(this);
-
+        this.currentLineDbGetter = this.currentLineDbGetter.bind(this);
         this.tableRowTemplate = ({ children, row }) => (
             <tr
                 onClick={() => window.location = `${this.props.location.pathname}/${row.id}`}
@@ -54,7 +55,6 @@ class Landshluti extends Component {
     changeSelection(selection) {
         const lastSelected = selection
             .find(selected => this.state.selection.indexOf(selected) === -1);
-
         if (lastSelected !== undefined) {
             this.setState({ selection: [lastSelected] });
         } else {
@@ -64,8 +64,16 @@ class Landshluti extends Component {
     }
     componentDidMount() {
         const { match: { path } } = this.props;
+        var MyRe = /\/(.+)/g;
+        const url = this.props.match.url;
+        var area = MyRe.exec(`${url}`)
+        var yearArray = this.currentLineDbGetter(area[1]);
+        console.log(yearArray)
         this.setState({
-            url: path
+            url: path,
+            area: area[1],
+            yearArray: yearArray
+            
         })
     }
     componentWillMount() {
@@ -108,33 +116,63 @@ class Landshluti extends Component {
                 })
             }
         }
-
         // Búa til array sem inniheldur summu allra veidda fiska á landshluta
         var array = AllRows.map((o => o.data.map(d => d)))
         var sum = array[0].map((_, i) => array.reduce((p, _, j) => p + array[j][i], 0));
 
         //búa til gögn sem sína síðustu 2 ár í veið
-        var yearSelect = 2;
-        var maxYear = 2017 - 1974;
-        var minYear = 2016 - 1974;
-        var select = [minYear, maxYear];
+       // var yearSelect = 2;
+        //var maxYear = 2017 - 1974;
+        //var minYear = 2016 - 1974;
+        //var select = [minYear, maxYear];
         var newArray = [];
         newArray = AllRows.map( a=> ({...a, data: a.data.slice(Math.max(a.data.length - 5, 1))})   )
         // Summa up árinn sem eru valinn
-        var yearsArray = newArray.map((o => o.data.map(d => d)))
+        //var yearsArray = newArray.map((o => o.data.map(d => d)))
         //var yearSum = yearsArray[0].map((_, i) => yearsArray.reduce((p, _, j) => p + yearsArray[j][i], 0));
-        //console.log(yearsArray)
+        //console.log(yearsArray)     
+        var yearArray = this.currentLineDbGetter(area[1]);
+        console.log(yearArray[1])
         this.setState({
             rows: AllRows,
             heildarveidi: sum,
             area: area[1],
             landshluti: landshluti,
-            pastYear: newArray
+            pastYear: newArray,
+            yearArray: yearArray
         });
     }
+    currentLineDbGetter(area){
+        var yearArray = [];
+        var baseYear= 1974;
+        var selectNumber = this.state.year - baseYear;
+        var all = [];
+        var yearLineArray = []
+        var area = area;
+        for(var key in db){
+         if(db[key].year[selectNumber]){
+          if(db[key].area===area){
+            all.push(db[key].data[selectNumber])
+            yearLineArray.push(db[key].title)
+          }
+
+         }
+        // if(db[key].year.map(o => o===2017 )){
+        //   PieArray.push({
+        //     title: db[key].title,
+        //     data: db[key].data[this.state.selectNumber],
+        //     id: db[key].id,
+        //     area: db[key].area,
+        //   })
+        // }
+      }
+    //   yearArray = [ 
+    //   ]
+      return { all, yearLineArray};
+      }
+    
     checkBreyting(selection) {
         var brt = this.state.rows[selection].data[43] - this.state.rows[selection].data[42]
-
         if (brt > 0) {
             return (<p className="brt-green">{brt} laxar</p>);
         } else {
@@ -143,12 +181,12 @@ class Landshluti extends Component {
     }
     render() {
         var {
-            heildarveidi, years, year, selection, columns, rows, landshluti,
-            pastYear
+            heildarveidi, years, columns, rows, landshluti,pastYear,yearArray
          } = this.state;
         // Test if arrays are equal do not delete
         //console.log(this.state.rows.map(o=> [o.data.length, o.title]))
-        //console.log()
+        //console.log(yearArray)
+        
         return (
             <div className="App">
                 <NavBar />
@@ -175,11 +213,25 @@ class Landshluti extends Component {
                         <Col lg={10} md={10} sm={9} xs={12} >
                             <div className="chart-border">
                                 <RiverChart
-                                    title={`Heildar Veiði á ${landshluti}`}
+                                    title={`Veiði á ${landshluti} árið 2017`}
+                                    data={yearArray.all}
+                                    id={landshluti}
+                                    name={yearArray.yearLineArray}
+                                    years={'2017'}
+                                    color={'#337ab7'}
+                                    width={40}
+                                />
+                            </div>
+                        </Col>
+                        <Col lg={10} lgOffset={2} md={10} mdOffset={2} sm={9} smOffset={3} xs={12} >
+                            <div className="chart-border">
+                                <RiverChart
+                                    title={`Heildar Veiði á ${landshluti} frá upphafi`}
                                     data={heildarveidi}
                                     id={landshluti}
                                     years={years}
                                     color={'#337ab7'}
+                                    width={20}
                                 />
                             </div>
                         </Col>

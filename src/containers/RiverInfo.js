@@ -98,7 +98,7 @@ class RiverInfo extends Component {
                 <NavBar />
                 <div className="container" >
                     <Row>
-                        <Col lg={2} md={2} sm={2} xs={12} className="sidebar">
+                        <Col lg={2} md={2} sm={3} xs={12} className="sidebar">
                             <div>
                                 <Grid
                                     rows={rows}
@@ -126,6 +126,7 @@ class RiverInfo extends Component {
                                     id={sinlgeRiver.id}
                                     years={years}
                                     stangir={sinlgeRiver.stangir}
+                                    width={20}
                                 />
                             </div>
                         </Col>
