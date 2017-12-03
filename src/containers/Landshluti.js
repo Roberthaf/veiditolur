@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import '../styles/Landshluti.css'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, Button } from 'react-bootstrap'
 import NavBar from '../components/NavBar'
 import * as db from '../DataBase/DataBase'
 import { year } from '../DataBase/years'
@@ -38,12 +38,19 @@ class Landshluti extends Component {
             landshluti: '',
             area: '',
             year: 2017,
+            selectNumber: 43,
             pastYear: '',
-            yearArray: ''
+            yearArray: '',
+            
         }
+        this.handleChange = this.handleChange.bind(this);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+
         this.changeSelection = this.changeSelection.bind(this);
         this.checkBreyting = this.checkBreyting.bind(this);
         this.currentLineDbGetter = this.currentLineDbGetter.bind(this);
+        this.sortFunction = this.sortFunction.bind(this);
         this.tableRowTemplate = ({ children, row }) => (
             <tr
                 onClick={() => window.location = `${this.props.location.pathname}/${row.id}`}
@@ -67,14 +74,22 @@ class Landshluti extends Component {
         var MyRe = /\/(.+)/g;
         const url = this.props.match.url;
         var area = MyRe.exec(`${url}`)
-        var yearArray = this.currentLineDbGetter(area[1]);
-        console.log(yearArray)
+        var yearArray = this.currentLineDbGetter();
+        //console.log(yearArray)
         this.setState({
             url: path,
             area: area[1],
             yearArray: yearArray
-            
+
         })
+    }
+    sortFunction(a, b) {
+        if (a[0] === b[0]) {
+            return 0;
+        }
+        else {
+            return (a[0] < b[0]) ? -1 : 1;
+        }
     }
     componentWillMount() {
         var AllRows = [];
@@ -121,18 +136,19 @@ class Landshluti extends Component {
         var sum = array[0].map((_, i) => array.reduce((p, _, j) => p + array[j][i], 0));
 
         //búa til gögn sem sína síðustu 2 ár í veið
-       // var yearSelect = 2;
+        // var yearSelect = 2;
         //var maxYear = 2017 - 1974;
         //var minYear = 2016 - 1974;
         //var select = [minYear, maxYear];
         var newArray = [];
-        newArray = AllRows.map( a=> ({...a, data: a.data.slice(Math.max(a.data.length - 5, 1))})   )
+        newArray = AllRows.map(a => ({ ...a, data: a.data.slice(Math.max(a.data.length - 5, 1)) }))
+
         // Summa up árinn sem eru valinn
         //var yearsArray = newArray.map((o => o.data.map(d => d)))
         //var yearSum = yearsArray[0].map((_, i) => yearsArray.reduce((p, _, j) => p + yearsArray[j][i], 0));
         //console.log(yearsArray)     
-        var yearArray = this.currentLineDbGetter(area[1]);
-        console.log(yearArray[1])
+        var yearArray = this.currentLineDbGetter();
+
         this.setState({
             rows: AllRows,
             heildarveidi: sum,
@@ -142,35 +158,39 @@ class Landshluti extends Component {
             yearArray: yearArray
         });
     }
-    currentLineDbGetter(area){
-        var yearArray = [];
-        var baseYear= 1974;
+    currentLineDbGetter() {
+        var area = this.state.area;
+        var baseYear = 1974;
         var selectNumber = this.state.year - baseYear;
         var all = [];
         var yearLineArray = []
-        var area = area;
-        for(var key in db){
-         if(db[key].year[selectNumber]){
-          if(db[key].area===area){
-            all.push(db[key].data[selectNumber])
-            yearLineArray.push(db[key].title)
-          }
+        //var area = area;
+        for (var key in db) {
+            if (db[key].year[selectNumber]) {
+                if (db[key].area === area) {
+                    if (db[key].data[selectNumber] === 0) {
+                        ///skip
+                    } else {
+                        all.push(db[key].data[selectNumber])
+                        yearLineArray.push(db[key].title)
+                    }
+                }
 
-         }
-        // if(db[key].year.map(o => o===2017 )){
-        //   PieArray.push({
-        //     title: db[key].title,
-        //     data: db[key].data[this.state.selectNumber],
-        //     id: db[key].id,
-        //     area: db[key].area,
-        //   })
-        // }
-      }
-    //   yearArray = [ 
-    //   ]
-      return { all, yearLineArray};
-      }
-    
+            }
+            // if(db[key].year.map(o => o===2017 )){
+            //   PieArray.push({
+            //     title: db[key].title,
+            //     data: db[key].data[this.state.selectNumber],
+            //     id: db[key].id,
+            //     area: db[key].area,
+            //   })
+            // }
+        }
+        //   yearArray = [ 
+        //   ]
+        return { all, yearLineArray };
+    }
+
     checkBreyting(selection) {
         var brt = this.state.rows[selection].data[43] - this.state.rows[selection].data[42]
         if (brt > 0) {
@@ -179,20 +199,52 @@ class Landshluti extends Component {
             return (<p className="brt-red">{brt} laxar</p>);
         }
     }
+    /*Hanlde db changes */
+    handleChange(e) {
+        e.preventDefault();
+        this.setState({
+            year: e.target.value,
+            selectNumber: e.target.value - 1974,
+        });
+    }
+    onFormSubmit(e) {
+        e.preventDefault();
+        if (this.state.year < 1974) {
+            this.setState({ errorMessage: 'Engin gögn eldri en frá 1974' })
+        } else {
+            this.setState({
+                errorMessage: '',
+                yearArray: this.currentLineDbGetter(),
+            })
+        }
+    }
+    handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (this.state.year < 1974) {
+                this.setState({ errorMessage: 'Engin gögn eldri en frá 1974' })
+            } else {
+                this.setState({
+                    errorMessage: '',
+                    yearArray: this.currentLineDbGetter(),
+                })
+            }
+        }
+    }
     render() {
         var {
-            heildarveidi, years, columns, rows, landshluti,pastYear,yearArray
+            heildarveidi, years, columns, rows, landshluti, yearArray
          } = this.state;
         // Test if arrays are equal do not delete
         //console.log(this.state.rows.map(o=> [o.data.length, o.title]))
-        //console.log(yearArray)
-        
+        //console.log(yearArray) pastYear
+        console.log(this.state)
         return (
             <div className="App">
                 <NavBar />
                 <div className="container">
                     <Row>
-                        <Col lg={2} md={2} sm={3} xs={12} >
+                        <Col lg={2} md={2} sm={12} xs={12} >
                             <Grid
                                 rows={rows}
                                 columns={columns}
@@ -210,7 +262,31 @@ class Landshluti extends Component {
                                 <PagingPanel />
                             </Grid>
                         </Col>
-                        <Col lg={10} md={10} sm={9} xs={12} >
+                        <Col lg={4} className="input-bar">
+
+                                <span className="input-group-item spanSize">Veldu ár: </span>
+                                <div className="input-bar-item">
+                                    <form>
+                                        <div className="input-group">
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="Search"
+                                                value={this.state.year}
+                                                onChange={this.handleChange}
+                                                onKeyPress={this.handleKeyPress}
+                                            />
+                                            <span className="input-group-btn">
+                                                <Button onClick={this.onFormSubmit}
+                                                    className="btn btn-info"
+                                                >Leita</Button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </Col>
+                        <Col lg={10} md={10} sm={12} xs={12} >
+
                             <div className="chart-border">
                                 <RiverChart
                                     title={`Veiði á ${landshluti} árið 2017`}
@@ -223,13 +299,13 @@ class Landshluti extends Component {
                                 />
                             </div>
                         </Col>
-                        <Col lg={10} lgOffset={2} md={10} mdOffset={2} sm={9} smOffset={3} xs={12} >
+                        <Col lg={10} lgOffset={2} md={10} mdOffset={2} sm={12} xs={12} >
                             <div className="chart-border">
                                 <RiverChart
                                     title={`Heildar Veiði á ${landshluti} frá upphafi`}
                                     data={heildarveidi}
                                     id={landshluti}
-                                    years={years}
+                                    name={years}
                                     color={'#337ab7'}
                                     width={20}
                                 />
@@ -237,9 +313,9 @@ class Landshluti extends Component {
                         </Col>
                     </Row>
                     <Row>
-                    <Col lg={10} lgOffset={2} md={10} mdOffset={2} sm={9} xs={12} >
+                        <Col lg={10} lgOffset={2} md={10} mdOffset={2} sm={9} xs={12} >
                             <div className="chart-border">
-{/*                                 <BarChart
+                                {/*                                 <BarChart
                                     data={pastYear}
                                     color={'#8467D7'}
                                 /> */}

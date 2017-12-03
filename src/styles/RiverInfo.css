@@ -28,3 +28,23 @@
  .brt-green{
      color: green;
  }
+ .input-bar {
+    display: table;
+  }
+  
+  .input-bar-item {
+    display: table-cell;
+  }
+  
+  .input-bar-item > button {
+    margin-left: 5px;
+  }
+  .input-bar > span {
+    font-size: 140%;
+    position: relative;
+    top:-10px;
+  } 
+  .input-group{
+  max-width: 150px;
+    
+  }

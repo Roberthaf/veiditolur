@@ -31,6 +31,20 @@
   -webkit-box-shadow: 0 0 3px #ccc;
   box-shadow: 0 0 3px #ccc;
 }
+.chart-border-text{
+  /* -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc; */
+  text-align: left;
+  margin-bottom:5px;
+  
+}
+.chart-border-text > h4{
+  padding-top: 15px;  
+  padding-bottom: 15px;
+  padding-left: 5px;
+  font-family: "Open Sans";
+}
 .chart-border > div > h3,h4{
   padding-top: 10px;
 }
@@ -61,4 +75,7 @@ max-width: 150px;
   .container {
      width: 100%;
   }
+}
+.input-search{
+  width:200px!important;
 }
